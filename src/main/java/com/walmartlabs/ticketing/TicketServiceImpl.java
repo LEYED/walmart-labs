@@ -5,22 +5,27 @@ import java.util.ArrayList;
 /**
  * Created by LEYED on 12/3/17.
  */
-public class TicketServiceTS implements TicketService {
+public class TicketServiceImpl implements TicketService {
 
     SeatsManager seatsManager;
+    PersistentSeatsService persistentSeatsService;
     ArrayList<SeatHold> seatHolds = new ArrayList<>();
-    PersistentSeatsService persistentSeatsService = new PersistentSeatServiceImpl();
 
-    public TicketServiceTS() {
-        seatsManager = new SeatsManagerTS(persistentSeatsService.getSeatsOnDataBase());
+    public TicketServiceImpl() {
+        persistentSeatsService = new PersistentSeatServiceImpl();
+        seatsManager = new SeatsManagerImpl(persistentSeatsService.getSeatsOnDataBase());
     }
 
     public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {
         SeatHold seatHold = new SeatHold(seatsManager);
-        seatHold.setHoldenSeats(seatsManager.getSeatsFromManager(numSeats));
+        try {
+            seatHold.setHoldenSeats(seatsManager.getSeatsFromManager(numSeats));
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
         seatHold.setUserEmail(customerEmail);
         seatHold.setSeatHoldId(seatHolds.size() + 1);
-        seatHold.setSeatHoldStatus(SeatHold.SeatHoldStatus.HOLDED);
+        seatHold.setSeatHoldStatus(SeatHold.SeatHoldStatus.HOLDEN);
         seatHolds.add(seatHold);
         new Thread(seatHold).start();
         return seatHold;
@@ -34,12 +39,13 @@ public class TicketServiceTS implements TicketService {
     }
 
     private String getReservationMessage(SeatHold seatHold) {
-        if (!seatHold.getSeatHoldStatus().equals(SeatHold.SeatHoldStatus.LOST_SEATS)){
+        if(seatHold == null){return "That is an invalid reservation number.";}
+        if (seatHold.getSeatHoldStatus().equals(SeatHold.SeatHoldStatus.HOLDEN)){
             seatHold.setHoldTimer(-1);
             seatHold.setSeatHoldStatus(SeatHold.SeatHoldStatus.RESERVED);
             return "Your tickets for " + seatHold.getSeatHoldId() + " are now reserved.";
         }else{
-            return "Your reservation has expired, your seats can be claimed by anyone!";
+            return "Your reservation has expired or has already been reserved.";
         }
     }
 

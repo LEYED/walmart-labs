@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 public interface SeatsManager {
     void returnSeatsToManager(ArrayList<Seat> initialSeats);
-    ArrayList<Seat> getSeatsFromManager(int numberOfSeats);
+    ArrayList<Seat> getSeatsFromManager(int numberOfSeats) throws IndexOutOfBoundsException;
     int getNumberOfSeats();
 }

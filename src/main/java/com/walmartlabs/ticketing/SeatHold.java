@@ -1,5 +1,6 @@
 package com.walmartlabs.ticketing;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +21,7 @@ public class SeatHold implements Runnable {
 
     public void run() {
         while (holdTimer >= 0){
-            holdTimer --;
+            holdTimer -= 1000;
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -33,9 +34,12 @@ public class SeatHold implements Runnable {
         }
     }
 
+    @PreDestroy
     public void returnSeatsToManager(){
         seatsManager.returnSeatsToManager(holdenSeats);
     }
+
+    public enum SeatHoldStatus {RESERVED , HOLDEN, LOST_SEATS};
 
     public ArrayList<Seat> getHoldenSeats() {
         return holdenSeats;
@@ -76,6 +80,4 @@ public class SeatHold implements Runnable {
     public void setSeatHoldStatus(SeatHoldStatus seatHoldStatus) {
         this.seatHoldStatus = seatHoldStatus;
     }
-
-    public enum SeatHoldStatus {RESERVED , HOLDED, LOST_SEATS};
 }

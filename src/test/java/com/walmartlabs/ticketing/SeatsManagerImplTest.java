@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 /**
  * Created by LEYED on 12/4/17.
  */
-public class SeatsManagerTSTest {
+public class SeatsManagerImplTest {
 
     ArrayList<Seat> startingSeats = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class SeatsManagerTSTest {
 
     @Test
     public void returnSeatsToManager() throws Exception {
-        SeatsManager seatsManager = new SeatsManagerTS(startingSeats);
+        SeatsManager seatsManager = new SeatsManagerImpl(startingSeats);
         ArrayList<Seat> returnedSeats = seatsManager.getSeatsFromManager(5);
         seatsManager.returnSeatsToManager(returnedSeats);
         assertEquals(seatsManager.getNumberOfSeats(), 10);
@@ -38,14 +38,14 @@ public class SeatsManagerTSTest {
 
     @Test
     public void getNumberOfSeats() throws Exception {
-        SeatsManager seatsManager = new SeatsManagerTS(startingSeats);
+        SeatsManager seatsManager = new SeatsManagerImpl(startingSeats);
         System.out.println("Testing");
         assertEquals(10, seatsManager.getNumberOfSeats());
     }
 
     @Test
     public void getSeatsFromManager() throws Exception {
-        SeatsManager seatsManager = new SeatsManagerTS(startingSeats);
+        SeatsManager seatsManager = new SeatsManagerImpl(startingSeats);
         ArrayList<Seat> returnedSeats = seatsManager.getSeatsFromManager(5);
         assertEquals(returnedSeats.get(0).getSeatId(), "A10");
         assertEquals(returnedSeats.get(1).getSeatId(), "A9");

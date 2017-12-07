@@ -2,7 +2,7 @@ package com.walmartlabs.console;
 
 import com.walmartlabs.ticketing.SeatHold;
 import com.walmartlabs.ticketing.TicketService;
-import com.walmartlabs.ticketing.TicketServiceTS;
+import com.walmartlabs.ticketing.TicketServiceImpl;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,8 +20,16 @@ public class ConsoleManagerImpl implements ConsoleManager {
     }
 
     public void startListeningCommands(){
-        ticketService = new TicketServiceTS();
+        ticketService = new TicketServiceImpl();
         boolean listeningCommand = true;
+
+        System.out.println("Welcome to the ticket reservation system please use the following commands: \n" +
+                "hold - to find and hold certain number of seats\n" +
+                "reserve - to make your final reservation based on your hold confirmation number\n" +
+                "available - to check how may seats are available now\n" +
+                "status -  to see the status of all the reservations\n" +
+                "exit - to exit the program\n" +
+                "Enjoy!\n");
 
         while(listeningCommand == true){
             System.out.println(":~ User: ");
@@ -52,8 +60,13 @@ public class ConsoleManagerImpl implements ConsoleManager {
         System.out.println("Enter the user email: ");
         String email = scanner.next();
         SeatHold seatHold = ticketService.findAndHoldSeats(numberOfSeats, email);
-        System.out.println("Your seats had been hold with reservation number: " + seatHold.getSeatHoldId() +
-                " for 5 minutes, please finish your reservation with this number and your email");
+        if(seatHold != null){
+            System.out.println("Your seats had been hold with reservation number: " + seatHold.getSeatHoldId() +
+                    " for 5 minutes, please finish your reservation with this number and your email");
+        }else{
+            System.out.println("There is not enough seats for your request please use \"available\" command" +
+                    "to see how many seats are left.");
+        }
     }
 
     private void reserveSeats(){
@@ -74,8 +87,8 @@ public class ConsoleManagerImpl implements ConsoleManager {
         System.out.println("--------------------------------------");
         allSeatHolds.forEach(seatHold ->
                 System.out.printf(seatHold.getSeatHoldId() + "\t" +
-                        seatHold.getUserEmail() + "\t" +
-                        seatHold.getSeatHoldStatus() + "\t\t" +
+                        seatHold.getUserEmail() + "\t\t" +
+                        seatHold.getSeatHoldStatus() + "\t" +
                         getTimeFromMillis(seatHold.getHoldTimer())+ "\n"));
     }
 

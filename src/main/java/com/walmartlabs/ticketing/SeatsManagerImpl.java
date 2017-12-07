@@ -6,11 +6,11 @@ import java.util.PriorityQueue;
 /**
  * Created by LEYED on 12/3/17.
  */
-public class SeatsManagerTS implements SeatsManager {
+public class SeatsManagerImpl implements SeatsManager {
 
     PriorityQueue<Seat> seats = new PriorityQueue<>();
 
-    public SeatsManagerTS(ArrayList<Seat> initialSeats) {
+    public SeatsManagerImpl(ArrayList<Seat> initialSeats) {
         this.seats.addAll(initialSeats);
     }
 
@@ -22,7 +22,7 @@ public class SeatsManagerTS implements SeatsManager {
         return this.seats.size();
     }
 
-    public ArrayList<Seat> getSeatsFromManager(int numberOfSeats){//TODO handle this as an exception
+    public ArrayList<Seat> getSeatsFromManager(int numberOfSeats) throws IndexOutOfBoundsException{
         if (getNumberOfSeats() >= numberOfSeats){
             ArrayList<Seat> selectedSeats = new ArrayList<>();
             for (int i = numberOfSeats; i > 0; i--) {
@@ -30,9 +30,8 @@ public class SeatsManagerTS implements SeatsManager {
             }
             return selectedSeats;
         } else {
-            System.out.println("There are no available seats, the current availability is " + getNumberOfSeats());
+            throw new IndexOutOfBoundsException();
         }
-        return null;
     }
 
 }
