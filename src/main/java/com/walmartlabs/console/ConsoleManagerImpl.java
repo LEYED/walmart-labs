@@ -1,8 +1,6 @@
 package com.walmartlabs.console;
 
-import com.walmartlabs.ticketing.SeatHold;
-import com.walmartlabs.ticketing.TicketService;
-import com.walmartlabs.ticketing.TicketServiceImpl;
+import com.walmartlabs.ticketing.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -17,10 +15,12 @@ public class ConsoleManagerImpl implements ConsoleManager {
     TicketService ticketService;
 
     public ConsoleManagerImpl() {
+        PersistentSeatsService persistentSeatsService = new PersistentSeatServiceImpl();
+        SeatsManager seatsManager = new SeatsManagerImpl(persistentSeatsService.getSeatsOnDataBase());
+        ticketService = new TicketServiceImpl(seatsManager);
     }
 
     public void startListeningCommands(){
-        ticketService = new TicketServiceImpl();
         boolean listeningCommand = true;
 
         System.out.println("Welcome to the ticket reservation system please use the following commands: \n" +

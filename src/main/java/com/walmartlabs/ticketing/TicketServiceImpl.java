@@ -8,12 +8,10 @@ import java.util.ArrayList;
 public class TicketServiceImpl implements TicketService {
 
     SeatsManager seatsManager;
-    PersistentSeatsService persistentSeatsService;
     ArrayList<SeatHold> seatHolds = new ArrayList<>();
 
-    public TicketServiceImpl() {
-        persistentSeatsService = new PersistentSeatServiceImpl();
-        seatsManager = new SeatsManagerImpl(persistentSeatsService.getSeatsOnDataBase());
+    public TicketServiceImpl(SeatsManager seatsManager) {
+        this.seatsManager = seatsManager;
     }
 
     public SeatHold findAndHoldSeats(int numSeats, String customerEmail) {

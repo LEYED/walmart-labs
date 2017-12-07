@@ -10,17 +10,19 @@ import static org.junit.Assert.*;
 public class TicketServiceImplTest {
 
     TicketService ticketService;
+    PersistentSeatsService persistentSeatsService = new PersistentSeatServiceImpl();
+    SeatsManager seatsManager = new SeatsManagerImpl(persistentSeatsService.getSeatsOnDataBase());
 
     @Test
     public void numSeatsAvailable() throws Exception {
-        ticketService =  new TicketServiceImpl();
+        ticketService =  new TicketServiceImpl(seatsManager);
         int numberOfSeats = ticketService.numSeatsAvailable();
         assertEquals(numberOfSeats, 36);
     }
 
     @Test
     public void findAndHoldSeats() throws Exception {
-        ticketService =  new TicketServiceImpl();
+        ticketService =  new TicketServiceImpl(seatsManager);
         int numberOfSeats = ticketService.numSeatsAvailable();
         assertEquals(numberOfSeats, 36);
         ticketService.findAndHoldSeats(2, "user@email.com");
@@ -37,7 +39,7 @@ public class TicketServiceImplTest {
 
     @Test
     public void reserveSeats() throws Exception {
-        ticketService =  new TicketServiceImpl();
+        ticketService =  new TicketServiceImpl(seatsManager);
         ticketService.findAndHoldSeats(2, "user@email.com");
         assertEquals(ticketService.getAllSeatHolds().get(0).getSeatHoldStatus(), SeatHold.SeatHoldStatus.HOLDEN);
         ticketService.reserveSeats(1, "user@email.com");
